@@ -7,13 +7,16 @@ import { createParsingComponentsAtWeekday } from "../../../common/calculation/we
 
 const PATTERN = new RegExp(
     "(?:(?:\\,|\\(|\\（)\\s*)?" +
-        "(?:(este|esta|passado|pr[oó]ximo)\\s*)?" +
+        "(?:n[oa]\\s*?)?" +
+        "(?:(es[st]e|es[st]a|passad[oa]|pr[oó]xim[oa])\\s*)?" +
         `(${matchAnyPattern(WEEKDAY_DICTIONARY)})` +
         "(?:\\s*(?:\\,|\\)|\\）))?" +
-        "(?:\\s*(este|esta|passado|pr[óo]ximo)\\s*semana)?" +
-        "(?=\\W|\\d|$)",
+        "(?:\\s*(es[st]e|es[st]a|passad[oa]|pr[óo]ximo)\\s*semana)?" +
+        "(?=\\W|$)",
     "i"
 );
+
+// TODO
 
 const PREFIX_GROUP = 1;
 const WEEKDAY_GROUP = 2;
@@ -37,11 +40,11 @@ export default class PTWeekdayParser extends AbstractParserWithWordBoundaryCheck
         norm = norm.toLowerCase();
 
         let modifier = null;
-        if (norm == "passado") {
-            modifier = "this";
+        if (norm == "passado" || "passada") {
+            modifier = "last";
         } else if (norm == "próximo" || norm == "proximo") {
             modifier = "next";
-        } else if (norm == "este") {
+        } else if (norm == "este" || norm == "esse" || norm == "esta" || norm == "essa") {
             modifier = "this";
         }
 

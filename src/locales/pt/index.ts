@@ -16,6 +16,13 @@ import PTMergeDateRangeRefiner from "./refiners/PTMergeDateRangeRefiner";
 import PTMonthNameLittleEndianParser from "./parsers/PTMonthNameLittleEndianParser";
 import PTCasualDateParser from "./parsers/PTCasualDateParser";
 import PTCasualTimeParser from "./parsers/PTCasualTimeParser";
+import PTRelativeDateFormatParser from "./parsers/PTRelativeDateFormatParser";
+import PTTimeUnitCasualRelativeFormatParser from "./parsers/PTTimeUnitCasualRelativeFormatParser";
+import PTTimeUnitAgoFormatParser from "./parsers/PTTimeUnitAgoFormatParser";
+import PTSlashMonthFormatParser from "./parsers/PTSlashMonthFormatParser";
+import PTRelativeAfterDateFormatParser from "./parsers/PTRelativeAfterDateFormatParser";
+import PTMergeRelativeDateRefiner from "./refiners/PTMergeRelativeDateRefiner";
+import PTMonthNameParser from "./parsers/PTMonthNameParser";
 
 export { Chrono, Parser, Refiner, ParsingResult, ParsingComponents, ReferenceWithTimezone };
 export { Component, ParsedResult, ParsingOption, ParsingReference, Meridiem, Weekday };
@@ -39,6 +46,10 @@ export function createCasualConfiguration(littleEndian = true): Configuration {
     const option = createConfiguration(false, littleEndian);
     option.parsers.push(new PTCasualDateParser());
     option.parsers.push(new PTCasualTimeParser());
+    option.parsers.push(new PTRelativeDateFormatParser());
+    option.parsers.push(new PTRelativeAfterDateFormatParser());
+    option.parsers.push(new PTTimeUnitCasualRelativeFormatParser());
+    option.parsers.unshift(new PTMonthNameParser());
     return option;
 }
 
@@ -53,8 +64,11 @@ export function createConfiguration(strictMode = true, littleEndian = true): Con
                 new PTWeekdayParser(),
                 new PTTimeExpressionParser(),
                 new PTMonthNameLittleEndianParser(),
+                new PTTimeUnitCasualRelativeFormatParser(),
+                new PTSlashMonthFormatParser(),
+                new PTTimeUnitAgoFormatParser(strictMode),
             ],
-            refiners: [new PTMergeDateTimeRefiner(), new PTMergeDateRangeRefiner()],
+            refiners: [new PTMergeDateTimeRefiner(), new PTMergeDateRangeRefiner(), new PTMergeRelativeDateRefiner()],
         },
         strictMode
     );

@@ -10,6 +10,6 @@ import AbstractMergeDateRangeRefiner from "../../../common/refiners/AbstractMerg
  */
 export default class PTMergeDateRangeRefiner extends AbstractMergeDateRangeRefiner {
     patternBetween(): RegExp {
-        return /^\s*(?:-)\s*$/i;
+        return /^\s*(at[ée]|-|–|a|à)\s*$/i;
     }
 }
